@@ -1,12 +1,12 @@
 import React from 'react'
 
-const Header = () => {
+const Pnf = () => {
   return (
     <div>
-        Header
+        pnf
       
     </div>
   )
 }
 
-export default Header
+export default Pnf
