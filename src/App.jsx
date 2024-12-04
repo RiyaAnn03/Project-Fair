@@ -17,6 +17,7 @@ function App() {
       <Route path='/register' element={<Auth insideRegister={true}/>}/>
       <Route path='/dashboard' element={<Dashboard/>}/>
       <Route path='/project' element={<Project/>}/>
+
       <Route path='/*' element={<Pnf/>}/>
  </Routes>
  <Footer/>
