@@ -1,35 +1,77 @@
 import React, { useEffect, useState } from 'react'
 import { Modal,Button } from 'react-bootstrap'
 import uploadprojectImg from '../assets/uploadProjectImg.png'
+import { addprojectAPI } from '../services/allAP'
 const Add = () => {
   const [preview,setPreview]=useState("")
   const [uploadFileStatus,setUploadFileStatus]=useState(false)
   const [projectDetails,setProjectDetails]=useState({
-    title:"",languages:"",overview:"",github:"",website:"",projectImages:""
+    title:"",languages:"",overview:"",github:"",website:"",projectImage:""
   })
   console.log(projectDetails);
   
     const [show, setShow] = useState(false);
     useEffect(()=>{
-      if(projectDetails.projectImages.type=="image/png"||projectDetails.projectImages.type=="image/jpg"||projectDetails.projectImages.type=="image/jpeg"){
+      if(projectDetails.projectImage.type=="image/png"||projectDetails.projectImage.type=="image/jpg"||projectDetails.projectImage.type=="image/jpeg"){
         setUploadFileStatus(true)
-setPreview(        URL.createObjectURL(projectDetails.projectImages)) }
+setPreview(        URL.createObjectURL(projectDetails.projectImage)) }
 else{
         // invalid img file
         setUploadFileStatus(false)
-        setProjectDetails({...projectDetails,projectImages:""})
+        setProjectDetails({...projectDetails,projectImage:""})
       }
 
-    },[projectDetails.projectImages])
+    },[projectDetails.projectImage])
 
   const handleClose = () =>{ 
     setShow(false);
     setPreview("")
     setUploadFileStatus(false)
-    setProjectDetails({title:"",languages:"",overview:"",github:"",website:"",projectImages:"" })
+    setProjectDetails({title:"",languages:"",overview:"",github:"",website:"",projectImage:"" })
 
   }
   const handleShow = () => setShow(true);
+  const handleAddProject= async()=>{
+    const {title,languages,overview,github,website,projectImage}=projectDetails
+    if(title && languages && overview && github && website&& projectImage  ){
+      const reqBody=new FormData()
+      reqBody.append("title",title)
+      reqBody.append("languages",languages)
+      reqBody.append("overview",overview)
+      reqBody.append("github",github)
+      reqBody.append("website",website)
+      reqBody.append("projectImage",projectImage)
+      const token=sessionStorage.getItem("token")
+      if(token){
+        const reqHeader ={
+          "Content-Type":"multipart/form-data",
+          "Authorization":`Bearer ${token}`
+        }
+              //  make apicall
+              try{
+                const result= await addprojectAPI(reqBody,reqHeader)
+                console.log(result);
+                if(result.status==200){
+                  alert(`${result?.data?.title} uploaded successfully!!`)
+                  handleClose()
+                }else{
+                  if(result.response.status==406){
+                    alert(result.response.data)
+                  }
+                }
+                
+              }catch(err){
+                console.log(err);
+                
+              }
+
+      }
+
+
+    }else{
+      alert("please fill the form completely!!!")
+    }
+  }
 
   return (
     <>
@@ -42,7 +84,7 @@ else{
           <div className="row align-items-center">
             <div className="col-lg-4">
               <label >
-                <input onChange={e=>setProjectDetails({...projectDetails,projectImages:e.target.files[0]})} type="file"  style={{display:'none'}}/>
+                <input onChange={e=>setProjectDetails({...projectDetails,projectImage:e.target.files[0]})} type="file"  style={{display:'none'}}/>
                 <img className='img-fluid' height={'200px'}  src={preview?preview:uploadprojectImg} alt="" />
               </label>
 {
@@ -76,7 +118,7 @@ else{
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary">Add</Button>
+          <Button onClick={handleAddProject} variant="primary">Add</Button>
         </Modal.Footer>
       </Modal>
 
