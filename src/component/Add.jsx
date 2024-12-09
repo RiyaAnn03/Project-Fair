@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Modal,Button } from 'react-bootstrap'
 import uploadprojectImg from '../assets/uploadProjectImg.png'
 import { addprojectAPI } from '../services/allAP'
+import { addProjectContext } from '../contexts/ContextShare'
 const Add = () => {
+  const {addProjectResponse,setAddProjectResponse}=useContext(addProjectContext)
   const [preview,setPreview]=useState("")
   const [uploadFileStatus,setUploadFileStatus]=useState(false)
   const [projectDetails,setProjectDetails]=useState({
@@ -54,6 +56,8 @@ else{
                 if(result.status==200){
                   alert(`${result?.data?.title} uploaded successfully!!`)
                   handleClose()
+                  // share result to view via context
+                  setAddProjectResponse(result)
                 }else{
                   if(result.response.status==406){
                     alert(result.response.data)

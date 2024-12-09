@@ -552,6 +552,7 @@
                     - useParams() : hook will return dynamic value of route associated with a component
                     - useSelector() : hook used to select state from redux store
                     - useDispatch() : hook used to dispatch action from a Compoenet
+                    useNavigate():hook used to hook
                 - Custom Hooks : create js file to define a specific function for a special task. export the function from that file. function name must start with 'use' keyword
         14. Form Handling in React : there are 2 ways to Manage data inside the form by a component
             - Controlled Components : are component which store form data inside its own state
@@ -565,6 +566,8 @@
                 3. To set up path for component, use 'Route' component of react-router-dom Library. Route Compoenet has attributes like 'path' and 'element' inorder setup route for component. All Route component must be inside Routes component
             - Dynamic Routing : we can set up a dynamic / changing value in a url along : symbol, so react app will understand value along with a : is dynamic part of this url.
             - To set up Page not found url use path as * , its path must be set up at the end of all url in react app
+       -useNavigate hook :is return a function which capable of redirecting on epage to another from component
+       -Link component is used to redirect from one page to another using jsx
         16. Higher Order Compoenets (HOC) : are component whose props argument will give another Compoenet, ex: Route component
         17. API Call in react :
             - Using Axios Library : install axios - npm i axios
@@ -574,7 +577,19 @@
             - Create services folder inside src of your react app
         18. Data shairing between components in react
             - State Lifting : data shairing is using props. We will create a state in common parent of data to be shared Compoenets. share state updation function one component and state to another component. 
-
+           -Redux: using statemanagement library
+           -content API: used share data from different commponent , this is an in built feature react to share data between any component
+                        -we can share one component to another component using react cotext
+                        -Steps to perform data sharing using context api
+                          - create a folder for holding content 
+                          -create a component inside the folder for performing data share using content 
+                          -create context inside component file and export context, use'createContext' method
+                          -inside component create data(state & state update function) to be shared via the context
+                          -context can share data using 'Provider' property and as its 'value' propert component,beacause provider component 'value' 
+                          -make context component as the 'root component' of our project(inside main.jsx file wrap root component inside context component), then only project components become childer of context component
+                          -children props used to access all children of a component at the same time
+                          -useContext hook :to access data from context in component
+                              -const {value} =useContext(Context)
 
 
         ------------------------------------------------------------------
@@ -734,22 +749,115 @@
                 - express package : npm i express - used to create express server
                 - cors packages : npm i cors - used to enable cors Protocol
                 - dotenv packages : npm i dotenv - used to load content of .env file into process object
+                - mongoose package : npm i mongoose - used to communicate between node & MongoDB
             - create .env file for storing environmental variable of the project
             - create .gitignore file for adding file / folder name inorder to ignore them while adding to git
             - create main entry of server which is index.js file in server folder, used to define server
             - Steps to create express server in index.js
                 - import express, cors and dotenv
+                - import db connection file
                 - create express server, which is capable of resolving client request
                 - use cors in express server, used to enable data shairing between server and client app
                 - use json parser inside server app
+                - use router inside server app
                 - create PORT number for server app
                 - listen server app in created PORT
                 - run server app to make express app available created port : use the command in server terminal 'node index.js' / nodemon index.js
                 - to http request using express server
                     express-server.http-request(path,resolving function with 2 argument for request, response )
-        3.MVC Architecture of Node Application
-          -Controller: used to define logic to resolve client request
-                 -create a folder for controller      
-                  -create a js file for each controller
-                  -define logic to resolve each request  & export the same 
-                -Routes:are used to define route for each client re       
+        3. MVC Architecture of Node Application
+            - Controller : used to define logic to resolve client request
+                - create a folder for controllers
+                    - create a js file for each controllers
+                    - define logic to resolve each request and export the same
+                    - import model in controllers
+            - Routes : used to define route for each client request
+                - create a folder for Routes in server
+                - create js file to define route/ path / url where client can request
+                - import express
+                - create an object for Router class of express
+                - using router object object we can define path in server app for client request
+                - export router object and use it in server app
+            - DB Connection with server app
+                - install mongoose : npm i mongoose
+                - create folder inside server app
+                - create js file to define db Connection
+                - import mongoose
+                - get mongodb atlas connection string from .env
+                - using mongoose connect method establish connection between server server and mongodb
+                - import connection file inside index.js to execute connection
+            - Model : used to communicate node js with db
+                - create a folder inside server
+                - create a js file to define model
+                - import mongoose inside file
+                - using mongoose create schema / structure for data to be stored model
+                - create model using schema 
+                - export model 
+            - Middlewares : used to perform a task before executing its controllers
+                - create folder inside server
+                - create js file to define middleware and export middleware
+                - use middleware in specific router
+            - Handling uploaded file in server
+                - install multer : npm i multer
+                - create a folder to store uploaded files in server folder
+                - create js file to handling uploading file using multer in middleware folder
+                - defining storage space for uploaded file and use the storage in multer function and it return a multer instance which act as a middleware
+                - export the multer instance
+                - we will use multer middleware inside any route which handling uploaded file from request, multer middleware can handle single / multiple uploaded files
+            - Exporting static file from a server to internet using node js : server.use(url,express.static('folder/file-path')) in index.js file
+
+        ----------------------------------------------------------------------------------
+                MONGOOSE - node js package used to communicate with MongoDB & Nodejs
+        ----------------------------------------------------------------------------------
+
+        1. ODM (Object Data Modeling) for MongoDB to Nodejs
+        2. Mongoose library is used to create and manage MongoDB document with Nodejs
+        3. Install mongoose : npm i mongoose
+        4. Schema : used to define structure of data to be stored in MongoDB, to create schema, create an object for mongoose Schema class
+        5. Model : similar to collection of MongoDB , model will communicate controllers of  a node js app
+        6. CRUD operation using mongoose
+            - to create/insert a data in mongoose model for that we have to create object for model and pass its argument as data, to store model data permanently in MongoDB use mongoose 'save' method
+            - read / get data : find() , findOne() , findById()
+            - Update a data : updateOne(), updateMany() , findByIdAndUpdate()
+            - delete a data : deleteOne() , deleteMany() , findByIdAndDelete()
+        7. Querying statements used in mongoose : skip() , limit() , sort()
+
+
+        ----------------------------------------------------------------------------------
+                        JSON WEB TOKEN - USED TO AUTHORIZATION IN NODE JS
+        ----------------------------------------------------------------------------------
+
+        1. JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object.
+        2. features 
+            - Authorization
+            - Information Exchange
+        3. Structure of token : header.payload.signature
+        4. To generate token : 
+            - install jsonwebtoken : npm i jsonwebtoken
+            - import jsonwebtoken 
+            - use sign method to generate token : sign(payload,password)
+            - payload : are used to store data inside the token
+            - when user successfully login then generate token for Authorization 
+        5. Verify token : use verify method use token and password used to generate token
+            - if token verified then we will get an object as response with data stored in token its payload
+            - if token verification is failed then we will get error
+
+
+        ----------------------------------------------------------------------------------
+                    MIDDLEWARES : Controll request response cycle of Node js
+        ----------------------------------------------------------------------------------
+
+        1. They are function with 3 arguments, first is request, second is response and third is next. 
+        2. Different types of middleware 
+            - Application specific middleware , ex: express.json()
+            - Router specific middleware : active for certain Routes
+                - create a function with 3 arguments
+        
+        ----------------------------------------------------------------------------------
+                MULTER : Middlewares used to handle multipart/form-data in Nodejs
+        ----------------------------------------------------------------------------------
+
+        1. Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files.
+        2. Install multer : npm i multer
+        3. Multer adds a body object and a file or files object to the request object. The body object contains the values of the text fields of the form, the file or files object contains the files uploaded via the form.
+        4. multer can stored uploaded file  in server
